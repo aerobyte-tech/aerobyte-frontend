@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AeroByte Tech Solutions – Smart Solutions. Solid Performance.</title>
+  <meta name="description" content="AeroByte Tech Solutions – Custom Software, Hardware Setup, Networking & IT Support. We Build. We Setup. We Support." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --navy:    #04112b;
+      --navy2:   #071a3e;
+      --blue1:   #0d47a1;
+      --blue2:   #1565c0;
+      --blue3:   #1976d2;
+      --sky:     #42a5f5;
+      --sky2:    #64b5f6;
+      --white:   #ffffff;
+      --offwhite:#e8f4fd;
+      --text-dim:#a0bcd8;
+      --accent:  #00b4ff;
+      --card-bg: rgba(13,71,161,0.13);
+      --border:  rgba(66,165,245,0.18);
+      --shadow:  0 8px 32px rgba(0,0,0,0.35);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    a { text-decoration: none; color: inherit; }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--navy); }
+    ::-webkit-scrollbar-thumb { background: var(--blue2); border-radius: 3px; }
+
+    /* ===== CIRCUIT CANVAS ===== */
+    #circuit-canvas {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none; z-index: 0;
+      opacity: 0.12;
+    }
+
+    /* ===== NAVBAR ===== */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 1000;
+      background: rgba(4,17,43,0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 6%;
+      height: 68px;
+      transition: all .3s;
+    }
+    nav.scrolled { background: rgba(4,17,43,0.98); box-shadow: 0 2px 20px rgba(0,0,0,0.5); }
+    .nav-logo { display: flex; align-items: center; gap: 12px; }
+    .nav-logo-icon {
+      width: 40px; height: 40px;
+      background: linear-gradient(135deg, var(--blue1), var(--sky));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 900; color: white;
+      letter-spacing: -1px;
+    }
+    .nav-logo-text { font-size: 1.15rem; font-weight: 700; }
+    .nav-logo-text span { color: var(--sky); }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a {
+      font-size: .88rem; font-weight: 500; color: var(--text-dim);
+      transition: color .2s; position: relative;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0;
+      width: 0; height: 2px; background: var(--accent);
+      transition: width .3s;
+    }
+    .nav-links a:hover { color: var(--white); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-cta {
+      background: linear-gradient(90deg, var(--blue1), var(--blue3));
+      color: white; border: none; padding: 9px 22px;
+      border-radius: 6px; font-size: .85rem; font-weight: 600;
+      cursor: pointer; transition: all .3s;
+      box-shadow: 0 4px 15px rgba(21,101,192,0.4);
+    }
+    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(21,101,192,0.6); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+    .hamburger span { width: 24px; height: 2px; background: var(--sky); border-radius: 2px; transition: all .3s; }
+
+    /* ===== HERO ===== */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      position: relative; overflow: hidden;
+      padding: 100px 6% 60px;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(21,101,192,0.22) 0%, transparent 70%),
+                  linear-gradient(180deg, var(--navy) 0%, #051428 100%);
+    }
+    .hero-glow {
+      position: absolute; top: 20%; right: 5%;
+      width: 520px; height: 520px;
+      background: radial-gradient(circle, rgba(66,165,245,0.15) 0%, transparent 70%);
+      border-radius: 50%; pointer-events: none;
+    }
+    .hero-content {
+      position: relative; z-index: 1;
+      max-width: 660px;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(66,165,245,0.12); border: 1px solid rgba(66,165,245,0.3);
+      padding: 7px 16px; border-radius: 30px;
+      font-size: .8rem; font-weight: 600; color: var(--sky);
+      margin-bottom: 24px; letter-spacing: .5px;
+    }
+    .hero-badge-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.4)} }
+    .hero-title {
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      font-weight: 900; line-height: 1.12;
+      margin-bottom: 10px;
+    }
+    .hero-title .aero { color: var(--white); }
+    .hero-title .byte {
+      background: linear-gradient(90deg, var(--sky), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero-subtitle {
+      font-size: 1rem; color: var(--sky); font-weight: 600;
+      letter-spacing: 3px; text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    .hero-desc {
+      font-size: 1.05rem; color: var(--text-dim); line-height: 1.75;
+      margin-bottom: 36px; max-width: 540px;
+    }
+    .hero-tagline {
+      font-size: .9rem; font-weight: 700; color: var(--sky2);
+      margin-bottom: 36px; letter-spacing: 1px;
+    }
+    .hero-tagline span { color: var(--white); }
+    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn-primary {
+      background: linear-gradient(90deg, var(--blue1), var(--blue3));
+      color: white; padding: 14px 32px; border-radius: 8px;
+      font-weight: 700; font-size: .95rem;
+      box-shadow: 0 6px 24px rgba(13,71,161,0.5);
+      transition: all .3s; border: none; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(13,71,161,0.7); }
+    .btn-outline {
+      border: 2px solid rgba(66,165,245,0.5);
+      color: var(--sky); padding: 13px 30px; border-radius: 8px;
+      font-weight: 600; font-size: .95rem;
+      transition: all .3s; background: transparent; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-outline:hover { border-color: var(--sky); background: rgba(66,165,245,0.1); }
+    .hero-right {
+      position: absolute; right: 6%; top: 50%; transform: translateY(-50%);
+      z-index: 1; display: flex; flex-direction: column; gap: 16px;
+    }
+    .hero-stat-card {
+      background: rgba(13,71,161,0.2); border: 1px solid var(--border);
+      padding: 16px 22px; border-radius: 12px; text-align: center;
+      backdrop-filter: blur(8px); min-width: 140px;
+      animation: floatUp 4s ease-in-out infinite;
+    }
+    .hero-stat-card:nth-child(2) { animation-delay: 1.5s; }
+    .hero-stat-card:nth-child(3) { animation-delay: 3s; }
+    @keyframes floatUp { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+    .hero-stat-num { font-size: 1.8rem; font-weight: 900; color: var(--sky); }
+    .hero-stat-label { font-size: .72rem; color: var(--text-dim); font-weight: 500; margin-top: 2px; }
+
+    /* ===== SECTION BASE ===== */
+    section { padding: 90px 6%; position: relative; z-index: 1; }
+    .section-header { text-align: center; margin-bottom: 60px; }
+    .section-tag {
+      display: inline-block;
+      font-size: .75rem; font-weight: 700; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--sky);
+      background: rgba(66,165,245,0.1); border: 1px solid rgba(66,165,245,0.25);
+      padding: 5px 16px; border-radius: 30px; margin-bottom: 14px;
+    }
+    .section-title {
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      font-weight: 800; line-height: 1.2;
+    }
+    .section-title span { color: var(--sky); }
+    .section-divider {
+      width: 60px; height: 3px; margin: 16px auto 0;
+      background: linear-gradient(90deg, var(--blue1), var(--sky));
+      border-radius: 2px;
+    }
+    .section-desc { color: var(--text-dim); font-size: 1rem; margin-top: 14px; max-width: 540px; margin-left: auto; margin-right: auto; }
+
+    /* ===== ABOUT ===== */
+    #about { background: linear-gradient(180deg, var(--navy) 0%, #060f24 100%); }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    .about-text h3 { font-size: 1.6rem; font-weight: 800; margin-bottom: 16px; }
+    .about-text h3 span { color: var(--sky); }
+    .about-text p { color: var(--text-dim); font-size: .97rem; line-height: 1.8; margin-bottom: 14px; }
+    .about-values { display: flex; flex-direction: column; gap: 12px; margin-top: 24px; }
+    .about-value { display: flex; align-items: center; gap: 12px; color: var(--offwhite); font-size: .9rem; font-weight: 500; }
+    .about-value i { color: var(--sky); width: 20px; }
+    .about-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .about-card {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: 14px; padding: 24px 20px; text-align: center;
+      transition: all .3s;
+    }
+    .about-card:hover { transform: translateY(-4px); border-color: rgba(66,165,245,0.4); background: rgba(13,71,161,0.22); }
+    .about-card-icon { font-size: 2rem; margin-bottom: 10px; color: var(--sky); }
+    .about-card-num { font-size: 1.8rem; font-weight: 900; color: var(--white); }
+    .about-card-label { font-size: .78rem; color: var(--text-dim); margin-top: 4px; }
+
+    /* ===== SERVICES ===== */
+    #services { background: #060f24; }
+    .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+    .service-card {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: 16px; padding: 32px 26px;
+      transition: all .35s; position: relative; overflow: hidden;
+    }
+    .service-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--blue1), var(--sky));
+      transform: scaleX(0); transition: transform .35s;
+    }
+    .service-card:hover { transform: translateY(-6px); border-color: rgba(66,165,245,0.4); background: rgba(13,71,161,0.22); box-shadow: 0 16px 48px rgba(0,0,0,0.35); }
+    .service-card:hover::before { transform: scaleX(1); }
+    .service-icon {
+      width: 56px; height: 56px; border-radius: 14px;
+      background: linear-gradient(135deg, var(--blue1), var(--blue3));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; margin-bottom: 18px;
+      box-shadow: 0 4px 18px rgba(13,71,161,0.5);
+    }
+    .service-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; }
+    .service-desc { font-size: .85rem; color: var(--text-dim); line-height: 1.7; }
+    .service-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+    .service-tag {
+      font-size: .7rem; color: var(--sky2);
+      background: rgba(66,165,245,0.1); border: 1px solid rgba(66,165,245,0.2);
+      padding: 3px 10px; border-radius: 20px;
+    }
+
+    /* ===== PROJECTS ===== */
+    #projects { background: linear-gradient(180deg, #060f24 0%, var(--navy) 100%); }
+    .projects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+    .project-card {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: 20px; overflow: hidden;
+      transition: all .35s;
+      position: relative;
+    }
+    .project-card:hover { transform: translateY(-8px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); border-color: rgba(66,165,245,0.45); }
+    .project-banner {
+      height: 190px; position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .project-banner-parkzone {
+      background: linear-gradient(135deg, #0a1f44, #0d3b80, #1565c0);
+    }
+    .project-banner-barber {
+      background: linear-gradient(135deg, #0d1b2e, #1a3a5c, #1565c0);
+    }
+    .project-banner-icon { font-size: 4.5rem; opacity: .85; filter: drop-shadow(0 4px 16px rgba(66,165,245,0.6)); }
+    .project-badge {
+      position: absolute; top: 14px; right: 14px;
+      font-size: .7rem; font-weight: 700;
+      padding: 4px 12px; border-radius: 20px;
+    }
+    .badge-live { background: rgba(76,175,80,0.2); border: 1px solid rgba(76,175,80,0.5); color: #81c784; }
+    .badge-upcoming { background: rgba(255,167,38,0.15); border: 1px solid rgba(255,167,38,0.4); color: #ffb74d; }
+    .project-body { padding: 26px; }
+    .project-name { font-size: 1.3rem; font-weight: 800; margin-bottom: 8px; }
+    .project-name span { color: var(--sky); }
+    .project-desc { font-size: .875rem; color: var(--text-dim); line-height: 1.72; margin-bottom: 18px; }
+    .project-features { display: flex; flex-direction: column; gap: 7px; margin-bottom: 20px; }
+    .project-feature { display: flex; align-items: center; gap: 9px; font-size: .83rem; color: var(--offwhite); }
+    .project-feature i { color: var(--sky); font-size: .8rem; }
+    .project-tech { display: flex; flex-wrap: wrap; gap: 7px; }
+    .tech-pill {
+      font-size: .7rem; font-weight: 600; color: var(--sky2);
+      background: rgba(13,71,161,0.25); border: 1px solid rgba(66,165,245,0.22);
+      padding: 4px 12px; border-radius: 20px;
+    }
+
+    /* ===== WHY US ===== */
+    #why { background: var(--navy); }
+    .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; }
+    .why-card {
+      text-align: center; padding: 36px 24px;
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: 16px; transition: all .3s;
+    }
+    .why-card:hover { transform: translateY(-5px); border-color: rgba(66,165,245,0.4); }
+    .why-icon { font-size: 2.2rem; color: var(--sky); margin-bottom: 16px; }
+    .why-title { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+    .why-desc { font-size: .83rem; color: var(--text-dim); line-height: 1.65; }
+
+    /* ===== CONTACT ===== */
+    #contact { background: #060f24; }
+    .contact-wrapper { display: grid; grid-template-columns: 1fr 1.2fr; gap: 60px; align-items: start; }
+    .contact-info h3 { font-size: 1.5rem; font-weight: 800; margin-bottom: 14px; }
+    .contact-info h3 span { color: var(--sky); }
+    .contact-info p { color: var(--text-dim); font-size: .92rem; line-height: 1.75; margin-bottom: 30px; }
+    .contact-items { display: flex; flex-direction: column; gap: 18px; }
+    .contact-item { display: flex; align-items: flex-start; gap: 16px; }
+    .contact-item-icon {
+      width: 44px; height: 44px; border-radius: 10px; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--blue1), var(--blue3));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+    }
+    .contact-item-text { }
+    .contact-item-label { font-size: .73rem; text-transform: uppercase; letter-spacing: 1px; color: var(--sky); font-weight: 700; }
+    .contact-item-val { font-size: .92rem; color: var(--offwhite); margin-top: 2px; }
+    .contact-form {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: 18px; padding: 36px 32px;
+    }
+    .form-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 24px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+    .form-label { font-size: .8rem; font-weight: 600; color: var(--sky2); }
+    .form-input, .form-textarea {
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+      border-radius: 8px; padding: 11px 14px;
+      color: var(--white); font-family: inherit; font-size: .9rem;
+      transition: border-color .2s;
+    }
+    .form-input:focus, .form-textarea:focus {
+      outline: none; border-color: rgba(66,165,245,0.6);
+      background: rgba(66,165,245,0.05);
+    }
+    .form-textarea { resize: vertical; min-height: 110px; }
+    .form-submit {
+      width: 100%; padding: 14px;
+      background: linear-gradient(90deg, var(--blue1), var(--blue3));
+      color: white; border: none; border-radius: 8px;
+      font-size: 1rem; font-weight: 700; cursor: pointer;
+      transition: all .3s; letter-spacing: .5px;
+    }
+    .form-submit:hover { box-shadow: 0 8px 28px rgba(13,71,161,0.6); transform: translateY(-1px); }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: var(--navy2);
+      border-top: 1px solid var(--border);
+      padding: 50px 6% 28px;
+    }
+    .footer-top {
+      display: grid; grid-template-columns: 2fr 1fr 1fr;
+      gap: 48px; margin-bottom: 40px;
+    }
+    .footer-brand p { color: var(--text-dim); font-size: .88rem; line-height: 1.75; margin: 14px 0 22px; }
+    .footer-social { display: flex; gap: 12px; }
+    .social-btn {
+      width: 38px; height: 38px; border-radius: 8px;
+      background: rgba(66,165,245,0.1); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--sky); font-size: 1rem; transition: all .3s;
+    }
+    .social-btn:hover { background: var(--blue2); border-color: var(--blue2); color: white; transform: translateY(-2px); }
+    .footer-col h4 { font-size: .95rem; font-weight: 700; margin-bottom: 18px; color: var(--offwhite); }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-links li a { font-size: .85rem; color: var(--text-dim); transition: color .2s; }
+    .footer-links li a:hover { color: var(--sky); }
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      padding-top: 22px;
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: .8rem; color: var(--text-dim);
+    }
+    .footer-bottom span { color: var(--sky); }
+
+    /* ===== SCROLL TOP ===== */
+    #scrollTop {
+      position: fixed; bottom: 28px; right: 28px; z-index: 999;
+      width: 46px; height: 46px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--blue1), var(--blue3));
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 1.1rem; cursor: pointer;
+      box-shadow: 0 4px 18px rgba(13,71,161,0.6);
+      opacity: 0; transform: translateY(20px);
+      transition: all .3s; pointer-events: none; border: none;
+    }
+    #scrollTop.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    #scrollTop:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(13,71,161,0.8); }
+
+    /* ===== MARQUEE STRIP ===== */
+    .marquee-strip {
+      background: rgba(13,71,161,0.15); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      padding: 14px 0; overflow: hidden; position: relative; z-index: 1;
+    }
+    .marquee-inner {
+      display: flex; gap: 56px; white-space: nowrap;
+      animation: marquee 22s linear infinite;
+    }
+    .marquee-inner:hover { animation-play-state: paused; }
+    @keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+    .marquee-item { font-size: .82rem; font-weight: 600; color: var(--sky2); display: flex; align-items: center; gap: 8px; }
+    .marquee-item i { color: var(--accent); }
+
+    /* ===== ANIMATIONS ===== */
+    .fade-in {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 960px) {
+      .hero-right { display: none; }
+      .about-grid { grid-template-columns: 1fr; gap: 36px; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .contact-wrapper { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 680px) {
+      nav { padding: 0 4%; }
+      .nav-links, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+      section { padding: 70px 4%; }
+      .services-grid { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
+      .about-cards { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* ===== MOBILE MENU ===== */
+    .mobile-menu {
+      display: none; position: fixed; top: 68px; left: 0; right: 0;
+      background: rgba(4,17,43,0.97); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border); z-index: 999;
+      padding: 20px 6%; flex-direction: column; gap: 16px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { font-size: .95rem; color: var(--text-dim); font-weight: 500; padding: 8px 0; border-bottom: 1px solid var(--border); }
+    .mobile-menu a:last-child { border-bottom: none; }
+  </style>
+</head>
+<body>
+
+<!-- CIRCUIT CANVAS -->
+<canvas id="circuit-canvas"></canvas>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <div class="nav-logo">
+    <div class="nav-logo-icon">A</div>
+    <div class="nav-logo-text"><span>Aero</span>Byte</div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#hero">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Get In Touch</button>
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#hero" onclick="closeMenu()">Home</a>
+  <a href="#about" onclick="closeMenu()">About</a>
+  <a href="#services" onclick="closeMenu()">Services</a>
+  <a href="#projects" onclick="closeMenu()">Projects</a>
+  <a href="#contact" onclick="closeMenu()">Contact</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="hero-badge"><div class="hero-badge-dot"></div> AeroByte Tech Solutions</div>
+    <h1 class="hero-title">
+      <span class="aero">Aero</span><span class="byte">Byte</span><br/>
+      <span style="font-size:.65em; color: var(--offwhite);">Tech Solutions</span>
+    </h1>
+    <p class="hero-subtitle">Smart Solutions. Solid Performance.</p>
+    <p class="hero-desc">
+      We deliver cutting-edge software, hardware, and networking solutions to businesses and individuals across India.
+      From custom apps to complete IT infrastructure — we've got you covered.
+    </p>
+    <p class="hero-tagline">
+      <span>We Build.</span> &nbsp;We <span>Setup.</span> &nbsp;We <span>Support.</span>
+    </p>
+    <div class="hero-btns">
+      <a href="#services" class="btn-primary"><i class="fas fa-rocket"></i> Explore Services</a>
+      <a href="#contact" class="btn-outline"><i class="fas fa-comments"></i> Talk to Us</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-stat-card">
+      <div class="hero-stat-num">5+</div>
+      <div class="hero-stat-label">Services Offered</div>
+    </div>
+    <div class="hero-stat-card">
+      <div class="hero-stat-num">2+</div>
+      <div class="hero-stat-label">Live Projects</div>
+    </div>
+    <div class="hero-stat-card">
+      <div class="hero-stat-num">24/7</div>
+      <div class="hero-stat-label">Support Ready</div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-strip">
+  <div class="marquee-inner" id="marqueeInner"></div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-header fade-in">
+    <div class="section-tag">Who We Are</div>
+    <h2 class="section-title">About <span>AeroByte</span></h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="about-grid">
+    <div class="about-text fade-in">
+      <h3>Building India's <span>Digital Future</span></h3>
+      <p>AeroByte Tech Solutions is a technology company founded by Prince, a passionate Founder & Technical Specialist based in India. We specialize in delivering smart, reliable, and scalable technology solutions to businesses of all sizes.</p>
+      <p>Whether you need custom software, hardware setup, or complete networking infrastructure — our team brings technical excellence and dedicated support to every project we take on.</p>
+      <div class="about-values">
+        <div class="about-value"><i class="fas fa-check-circle"></i> End-to-end technology solutions under one roof</div>
+        <div class="about-value"><i class="fas fa-check-circle"></i> Dedicated post-deployment support & maintenance</div>
+        <div class="about-value"><i class="fas fa-check-circle"></i> Custom-built software tailored to your business</div>
+        <div class="about-value"><i class="fas fa-check-circle"></i> Own innovative products & Android applications</div>
+      </div>
+    </div>
+    <div class="about-cards fade-in">
+      <div class="about-card">
+        <div class="about-card-icon"><i class="fas fa-code"></i></div>
+        <div class="about-card-num">10+</div>
+        <div class="about-card-label">Technologies</div>
+      </div>
+      <div class="about-card">
+        <div class="about-card-icon"><i class="fas fa-users"></i></div>
+        <div class="about-card-num">100%</div>
+        <div class="about-card-label">Client Focus</div>
+      </div>
+      <div class="about-card">
+        <div class="about-card-icon"><i class="fas fa-mobile-alt"></i></div>
+        <div class="about-card-num">2+</div>
+        <div class="about-card-label">Apps on Play Store</div>
+      </div>
+      <div class="about-card">
+        <div class="about-card-icon"><i class="fas fa-headset"></i></div>
+        <div class="about-card-num">24/7</div>
+        <div class="about-card-label">Support Available</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-header fade-in">
+    <div class="section-tag">What We Do</div>
+    <h2 class="section-title">Our <span>Services</span></h2>
+    <div class="section-divider"></div>
+    <p class="section-desc">From software to hardware — we handle everything so you can focus on growing your business.</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card fade-in">
+      <div class="service-icon"><i class="fas fa-code"></i></div>
+      <div class="service-title">Software Solutions</div>
+      <div class="service-desc">Custom-built software for web, desktop, mobile, and enterprise. We develop scalable, user-friendly applications tailored to your exact requirements.</div>
+      <div class="service-tags">
+        <span class="service-tag">Web Apps</span>
+        <span class="service-tag">Desktop</span>
+        <span class="service-tag">Mobile</span>
+        <span class="service-tag">Enterprise</span>
+      </div>
+    </div>
+    <div class="service-card fade-in">
+      <div class="service-icon"><i class="fas fa-microchip"></i></div>
+      <div class="service-title">Hardware Setup & Installation</div>
+      <div class="service-desc">Complete hardware deployment from procurement to configuration. System setup, CCTV, printers, servers, POS — we handle it all professionally.</div>
+      <div class="service-tags">
+        <span class="service-tag">System Setup</span>
+        <span class="service-tag">Servers</span>
+        <span class="service-tag">CCTV</span>
+        <span class="service-tag">Maintenance</span>
+      </div>
+    </div>
+    <div class="service-card fade-in">
+      <div class="service-icon"><i class="fas fa-network-wired"></i></div>
+      <div class="service-title">Networking & IT Support</div>
+      <div class="service-desc">End-to-end networking solutions including LAN/WAN setup, WiFi planning, firewall configuration, and ongoing IT maintenance and support.</div>
+      <div class="service-tags">
+        <span class="service-tag">LAN/WAN</span>
+        <span class="service-tag">WiFi</span>
+        <span class="service-tag">Security</span>
+        <span class="service-tag">IT Support</span>
+      </div>
+    </div>
+    <div class="service-card fade-in">
+      <div class="service-icon"><i class="fas fa-box-open"></i></div>
+      <div class="service-title">Our Own Products</div>
+      <div class="service-desc">Innovative in-house software and hardware products designed for real-world business needs — reliable, affordable, and made in India.</div>
+      <div class="service-tags">
+        <span class="service-tag">ParkZone</span>
+        <span class="service-tag">BarberBook</span>
+        <span class="service-tag">More Coming</span>
+      </div>
+    </div>
+    <div class="service-card fade-in">
+      <div class="service-icon"><i class="fab fa-google-play"></i></div>
+      <div class="service-title">Apps on Play Store</div>
+      <div class="service-desc">Our Android applications are available on Google Play Store. Scan to explore our growing portfolio of mobile apps built for everyday users.</div>
+      <div class="service-tags">
+        <span class="service-tag">Android</span>
+        <span class="service-tag">Play Store</span>
+        <span class="service-tag">Free Apps</span>
+      </div>
+    </div>
+    <div class="service-card fade-in" style="border-color:rgba(66,165,245,0.3); background:rgba(13,71,161,0.18);">
+      <div class="service-icon" style="background: linear-gradient(135deg,#1a5276,#2980b9)"><i class="fas fa-handshake"></i></div>
+      <div class="service-title">SAP & Enterprise Consulting</div>
+      <div class="service-desc">Expanding into SAP implementation and enterprise-level consulting. We're growing our capabilities to serve large-scale business transformation projects.</div>
+      <div class="service-tags">
+        <span class="service-tag">SAP</span>
+        <span class="service-tag">ERP</span>
+        <span class="service-tag">Coming Soon</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-header fade-in">
+    <div class="section-tag">Our Work</div>
+    <h2 class="section-title">Featured <span>Projects</span></h2>
+    <div class="section-divider"></div>
+    <p class="section-desc">Real solutions we've built — solving everyday problems with smart technology.</p>
+  </div>
+  <div class="projects-grid">
+
+    <!-- ParkZone -->
+    <div class="project-card fade-in">
+      <div class="project-banner project-banner-parkzone">
+        <div class="project-banner-icon">🅿️</div>
+        <div class="project-badge badge-live"><i class="fas fa-circle" style="font-size:.5rem"></i> Live</div>
+      </div>
+      <div class="project-body">
+        <h3 class="project-name"><span>Park</span>Zone</h3>
+        <p class="project-desc">
+          A smart parking management system that helps businesses and parking lots digitize vehicle entry, exit, and billing. No more manual registers — ParkZone handles it all automatically.
+        </p>
+        <div class="project-features">
+          <div class="project-feature"><i class="fas fa-check"></i> Vehicle entry/exit tracking with timestamps</div>
+          <div class="project-feature"><i class="fas fa-check"></i> Automatic billing & receipt generation</div>
+          <div class="project-feature"><i class="fas fa-check"></i> Daily/monthly reports & analytics</div>
+          <div class="project-feature"><i class="fas fa-check"></i> Works on Android & Windows</div>
+        </div>
+        <div class="project-tech">
+          <span class="tech-pill">Android</span>
+          <span class="tech-pill">Java</span>
+          <span class="tech-pill">Firebase</span>
+          <span class="tech-pill">SQLite</span>
+          <span class="tech-pill">Parking</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- BarberBook -->
+    <div class="project-card fade-in">
+      <div class="project-banner project-banner-barber">
+        <div class="project-banner-icon">✂️</div>
+        <div class="project-badge badge-live"><i class="fas fa-circle" style="font-size:.5rem"></i> Live</div>
+      </div>
+      <div class="project-body">
+        <h3 class="project-name"><span>Barber</span>Book</h3>
+        <p class="project-desc">
+          A digital appointment & management system for salons and barbershops. Say goodbye to waiting queues — BarberBook lets customers book slots and shop owners manage their schedule effortlessly.
+        </p>
+        <div class="project-features">
+          <div class="project-feature"><i class="fas fa-check"></i> Online appointment booking system</div>
+          <div class="project-feature"><i class="fas fa-check"></i> Queue management & live wait time</div>
+          <div class="project-feature"><i class="fas fa-check"></i> Customer history & loyalty tracking</div>
+          <div class="project-feature"><i class="fas fa-check"></i> Owner dashboard with daily summary</div>
+        </div>
+        <div class="project-tech">
+          <span class="tech-pill">Android</span>
+          <span class="tech-pill">Firebase</span>
+          <span class="tech-pill">Notifications</span>
+          <span class="tech-pill">Salon</span>
+          <span class="tech-pill">Booking</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div style="text-align:center; margin-top: 40px;" class="fade-in">
+    <p style="color:var(--text-dim); font-size:.92rem; margin-bottom: 16px;">More projects coming soon — including SAP integrations and enterprise solutions.</p>
+    <a href="#contact" class="btn-primary" style="display:inline-flex"><i class="fas fa-lightbulb"></i> &nbsp;Have a Project Idea? Let's Talk</a>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section id="why">
+  <div class="section-header fade-in">
+    <div class="section-tag">Why Choose Us</div>
+    <h2 class="section-title">Why <span>AeroByte?</span></h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="why-grid">
+    <div class="why-card fade-in">
+      <div class="why-icon"><i class="fas fa-bolt"></i></div>
+      <div class="why-title">Fast Delivery</div>
+      <div class="why-desc">We deliver projects on time without compromising on quality. Speed and precision are our trademark.</div>
+    </div>
+    <div class="why-card fade-in">
+      <div class="why-icon"><i class="fas fa-shield-alt"></i></div>
+      <div class="why-title">Reliable & Secure</div>
+      <div class="why-desc">All our solutions are built with security-first approach ensuring your data and systems are always protected.</div>
+    </div>
+    <div class="why-card fade-in">
+      <div class="why-icon"><i class="fas fa-rupee-sign"></i></div>
+      <div class="why-title">Affordable Pricing</div>
+      <div class="why-desc">Enterprise-quality solutions at prices designed for Indian businesses — small, medium, or large.</div>
+    </div>
+    <div class="why-card fade-in">
+      <div class="why-icon"><i class="fas fa-headset"></i></div>
+      <div class="why-title">24/7 Support</div>
+      <div class="why-desc">Our team is always available to help you resolve issues and keep your systems running smoothly.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-header fade-in">
+    <div class="section-tag">Get In Touch</div>
+    <h2 class="section-title">Contact <span>Us</span></h2>
+    <div class="section-divider"></div>
+    <p class="section-desc">Ready to discuss your project? Reach out to us — we respond fast!</p>
+  </div>
+  <div class="contact-wrapper">
+    <div class="contact-info fade-in">
+      <h3>Let's Build Something <span>Great Together</span></h3>
+      <p>Whether you have a project idea, need IT support, or just want to know more about what we do — we'd love to hear from you.</p>
+      <div class="contact-items">
+        <div class="contact-item">
+          <div class="contact-item-icon"><i class="fas fa-phone"></i></div>
+          <div class="contact-item-text">
+            <div class="contact-item-label">Phone</div>
+            <div class="contact-item-val">+91 8929770223</div>
+            <div class="contact-item-val">+91 7053501691</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon"><i class="fas fa-envelope"></i></div>
+          <div class="contact-item-text">
+            <div class="contact-item-label">Email</div>
+            <div class="contact-item-val">aerobyte.tech@gmail.com</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon"><i class="fas fa-globe"></i></div>
+          <div class="contact-item-text">
+            <div class="contact-item-label">Website</div>
+            <div class="contact-item-val">www.aerobyte.in</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon"><i class="fas fa-map-marker-alt"></i></div>
+          <div class="contact-item-text">
+            <div class="contact-item-label">Location</div>
+            <div class="contact-item-val">India</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="contact-form fade-in">
+      <div class="form-title">Send Us a Message</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Your Name</label>
+          <input type="text" class="form-input" placeholder="Rahul Sharma" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone Number</label>
+          <input type="tel" class="form-input" placeholder="+91 9XXXXXXXXX" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input type="email" class="form-input" placeholder="your@email.com" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Service Needed</label>
+        <select class="form-input" style="cursor:pointer">
+          <option value="" disabled selected>Select a service...</option>
+          <option>Software Development</option>
+          <option>Hardware Setup & Installation</option>
+          <option>Networking & IT Support</option>
+          <option>ParkZone – Parking System</option>
+          <option>BarberBook – Salon Management</option>
+          <option>SAP / Enterprise Consulting</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Message</label>
+        <textarea class="form-textarea" placeholder="Tell us about your project or requirements..."></textarea>
+      </div>
+      <button class="form-submit" onclick="handleSubmit(this)">
+        <i class="fas fa-paper-plane"></i>&nbsp; Send Message
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="nav-logo">
+        <div class="nav-logo-icon">A</div>
+        <div class="nav-logo-text" style="font-size:1.2rem"><span>Aero</span>Byte Tech Solutions</div>
+      </div>
+      <p>Smart Solutions. Solid Performance. We Build. We Setup. We Support. — Your trusted technology partner across India.</p>
+      <div class="footer-social">
+        <a class="social-btn" href="mailto:aerobyte.tech@gmail.com"><i class="fas fa-envelope"></i></a>
+        <a class="social-btn" href="tel:+918929770223"><i class="fas fa-phone"></i></a>
+        <a class="social-btn" href="#"><i class="fab fa-whatsapp"></i></a>
+        <a class="social-btn" href="#"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul class="footer-links">
+        <li><a href="#services">Software Solutions</a></li>
+        <li><a href="#services">Hardware Setup</a></li>
+        <li><a href="#services">Networking & IT</a></li>
+        <li><a href="#services">Our Products</a></li>
+        <li><a href="#services">Play Store Apps</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul class="footer-links">
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#why">Why Us</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div>© 2025 <span>AeroByte Tech Solutions</span>. All rights reserved.</div>
+    <div>Built with ❤️ in India | <span>aerobyte.tech@gmail.com</span></div>
+  </div>
+</footer>
+
+<!-- SCROLL TOP -->
+<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-chevron-up"></i></button>
+
+<!-- SUCCESS POPUP MODAL -->
+<div id="successModal" style="
+  display:none; position:fixed; inset:0; z-index:9999;
+  background:rgba(4,17,43,0.85); backdrop-filter:blur(8px);
+  align-items:center; justify-content:center;
+">
+  <div id="modalBox" style="
+    background: linear-gradient(145deg,#071a3e,#0d2a5e);
+    border: 1px solid rgba(66,165,245,0.35);
+    border-radius: 22px; padding: 50px 40px 40px;
+    max-width: 460px; width: 90%; text-align: center;
+    position: relative;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.6), 0 0 60px rgba(66,165,245,0.1);
+    transform: scale(0.8) translateY(30px);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.35s ease;
+  ">
+    <!-- Glowing ring -->
+    <div style="
+      width:90px; height:90px; border-radius:50%; margin:0 auto 24px;
+      background: linear-gradient(135deg,#0d47a1,#42a5f5);
+      display:flex; align-items:center; justify-content:center;
+      font-size:2.4rem;
+      box-shadow: 0 0 0 12px rgba(66,165,245,0.12), 0 0 0 24px rgba(66,165,245,0.06);
+      animation: popRing 1.2s ease-out forwards;
+    ">✅</div>
+
+    <!-- Top badge -->
+    <div style="
+      display:inline-block; font-size:.72rem; font-weight:700;
+      letter-spacing:2px; text-transform:uppercase; color:#42a5f5;
+      background:rgba(66,165,245,0.1); border:1px solid rgba(66,165,245,0.3);
+      padding:5px 16px; border-radius:30px; margin-bottom:16px;
+    ">Message Received</div>
+
+    <h2 style="font-size:1.55rem; font-weight:900; color:#fff; margin-bottom:10px; line-height:1.3;">
+      Thank You for <span style="color:#42a5f5;">Reaching Out!</span>
+    </h2>
+
+    <p style="color:#a0bcd8; font-size:.95rem; line-height:1.75; margin-bottom:10px;">
+      Your query has been successfully submitted to <strong style="color:#e8f4fd;">AeroByte Tech Solutions</strong>.
+    </p>
+
+    <!-- 24hr highlight box -->
+    <div style="
+      background:rgba(66,165,245,0.1); border:1px solid rgba(66,165,245,0.3);
+      border-radius:12px; padding:16px 20px; margin:20px 0;
+      display:flex; align-items:center; gap:14px;
+    ">
+      <div style="font-size:2rem; flex-shrink:0;">⏰</div>
+      <div style="text-align:left;">
+        <div style="font-size:.75rem; text-transform:uppercase; letter-spacing:1.5px; color:#42a5f5; font-weight:700; margin-bottom:4px;">Response Time</div>
+        <div style="font-size:1.1rem; font-weight:800; color:#fff;">We will reach you within <span style="color:#42a5f5;">24 Hours</span></div>
+      </div>
+    </div>
+
+    <p style="color:#a0bcd8; font-size:.82rem; margin-bottom:28px;">
+      For urgent queries, call us directly at <strong style="color:#e8f4fd;">+91 8929770223</strong>
+    </p>
+
+    <button onclick="closeModal()" style="
+      background:linear-gradient(90deg,#0d47a1,#1976d2);
+      color:white; border:none; border-radius:10px;
+      padding:13px 40px; font-size:.95rem; font-weight:700;
+      cursor:pointer; width:100%; letter-spacing:.5px;
+      box-shadow:0 6px 22px rgba(13,71,161,0.5);
+      transition:all .3s;
+    " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 28px rgba(13,71,161,0.7)'"
+       onmouseout="this.style.transform=''; this.style.boxShadow='0 6px 22px rgba(13,71,161,0.5)'">
+      <i class="fas fa-thumbs-up"></i>&nbsp; Got It, Thanks!
+    </button>
+
+    <!-- Close X -->
+    <button onclick="closeModal()" style="
+      position:absolute; top:16px; right:18px;
+      background:rgba(66,165,245,0.1); border:1px solid rgba(66,165,245,0.25);
+      color:#42a5f5; width:32px; height:32px; border-radius:8px;
+      font-size:.9rem; cursor:pointer; display:flex; align-items:center; justify-content:center;
+      transition:all .2s;
+    " onmouseover="this.style.background='rgba(66,165,245,0.25)'"
+       onmouseout="this.style.background='rgba(66,165,245,0.1)'">✕</button>
+  </div>
+</div>
+
+<style>
+@keyframes popRing {
+  0%  { transform:scale(0); box-shadow:none; }
+  60% { transform:scale(1.15); }
+  100%{ transform:scale(1); box-shadow:0 0 0 12px rgba(66,165,245,0.12),0 0 0 24px rgba(66,165,245,0.06); }
+}
+</style>
+
+<script>
+// ===== CIRCUIT CANVAS =====
+const canvas = document.getElementById('circuit-canvas');
+const ctx = canvas.getContext('2d');
+let nodes = [], w, h;
+function resize() {
+  w = canvas.width = window.innerWidth;
+  h = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+for(let i = 0; i < 60; i++) nodes.push({
+  x: Math.random()*window.innerWidth,
+  y: Math.random()*window.innerHeight,
+  vx: (Math.random()-.5)*.4,
+  vy: (Math.random()-.5)*.4,
+  r: Math.random()*2+1
+});
+function drawCircuit() {
+  ctx.clearRect(0,0,w,h);
+  ctx.strokeStyle='#42a5f5'; ctx.fillStyle='#42a5f5';
+  for(let i=0;i<nodes.length;i++){
+    nodes[i].x += nodes[i].vx; nodes[i].y += nodes[i].vy;
+    if(nodes[i].x<0||nodes[i].x>w) nodes[i].vx*=-1;
+    if(nodes[i].y<0||nodes[i].y>h) nodes[i].vy*=-1;
+    ctx.beginPath(); ctx.arc(nodes[i].x,nodes[i].y,nodes[i].r,0,Math.PI*2); ctx.fill();
+    for(let j=i+1;j<nodes.length;j++){
+      const dx=nodes[i].x-nodes[j].x, dy=nodes[i].y-nodes[j].y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      if(d<140){ ctx.globalAlpha=(1-d/140)*.5; ctx.lineWidth=.6; ctx.beginPath(); ctx.moveTo(nodes[i].x,nodes[i].y); ctx.lineTo(nodes[j].x,nodes[j].y); ctx.stroke(); }
+    }
+    ctx.globalAlpha=1;
+  }
+  requestAnimationFrame(drawCircuit);
+}
+drawCircuit();
+
+// ===== MARQUEE =====
+const marqueeItems = [
+  'Software Development','Hardware Setup','Networking Solutions',
+  'Android Apps','IT Support','ParkZone','BarberBook',
+  'Enterprise Solutions','Smart Solutions','Solid Performance',
+  'We Build','We Setup','We Support'
+];
+const mi = document.getElementById('marqueeInner');
+[...marqueeItems,...marqueeItems].forEach(txt => {
+  mi.innerHTML += `<div class="marquee-item"><i class="fas fa-star"></i>${txt}</div>`;
+});
+
+// ===== SCROLL =====
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('navbar');
+  const st = document.getElementById('scrollTop');
+  if(window.scrollY>60){ nav.classList.add('scrolled'); } else { nav.classList.remove('scrolled'); }
+  if(window.scrollY>400){ st.classList.add('show'); } else { st.classList.remove('show'); }
+});
+
+// ===== FADE IN OBSERVER =====
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// ===== MOBILE MENU =====
+function toggleMenu(){ document.getElementById('mobileMenu').classList.toggle('open'); }
+function closeMenu(){ document.getElementById('mobileMenu').classList.remove('open'); }
+
+// ===== BACKEND API URL — Update this after deploying backend on Render =====
+// During local testing: 'http://localhost:5000'
+// After deployment:     'https://aerobyte-backend.onrender.com'  (your Render URL)
+const API_URL = 'https://aerobyte-backend.onrender.com';
+
+// ===== FORM SUBMIT WITH VALIDATION + API CALL =====
+async function handleSubmit(btn){
+  const form      = btn.closest('.contact-form');
+  const allInputs = form.querySelectorAll('.form-input, .form-textarea');
+  let valid = true;
+
+  allInputs.forEach(inp => {
+    inp.style.borderColor = '';
+    inp.style.background  = '';
+    if(!inp.value.trim()){
+      inp.style.borderColor = 'rgba(239,83,80,0.7)';
+      inp.style.background  = 'rgba(239,83,80,0.06)';
+      valid = false;
+    }
+  });
+
+  if(!valid){
+    btn.innerHTML = '<i class="fas fa-exclamation-circle"></i>&nbsp; Please fill all fields';
+    btn.style.background = 'linear-gradient(90deg,#b71c1c,#c62828)';
+    setTimeout(()=>{
+      btn.innerHTML = '<i class="fas fa-paper-plane"></i>&nbsp; Send Message';
+      btn.style.background = '';
+      allInputs.forEach(inp => { inp.style.borderColor=''; inp.style.background=''; });
+    }, 2500);
+    return;
+  }
+
+  // Collect form data
+  const fields  = form.querySelectorAll('.form-input, .form-textarea');
+  const payload = {
+    name    : fields[0].value.trim(),
+    phone   : fields[1].value.trim(),
+    email   : fields[2].value.trim(),
+    service : fields[3].value.trim(),
+    message : fields[4].value.trim()
+  };
+
+  // Loading state
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>&nbsp; Sending...';
+  btn.disabled  = true;
+  btn.style.opacity = '.8';
+
+  try {
+    const res  = await fetch(`${API_URL}/api/queries`, {
+      method  : 'POST',
+      headers : { 'Content-Type': 'application/json' },
+      body    : JSON.stringify(payload)
+    });
+    const data = await res.json();
+
+    if(res.ok && data.success){
+      allInputs.forEach(inp => { inp.value=''; inp.style.borderColor=''; inp.style.background=''; });
+      openModal();
+    } else {
+      throw new Error(data.error || 'Server error');
+    }
+  } catch(err) {
+    btn.innerHTML = '<i class="fas fa-times-circle"></i>&nbsp; Failed — Try Again';
+    btn.style.background = 'linear-gradient(90deg,#b71c1c,#c62828)';
+    setTimeout(()=>{
+      btn.innerHTML = '<i class="fas fa-paper-plane"></i>&nbsp; Send Message';
+      btn.style.background = '';
+    }, 3000);
+    console.error('Form error:', err);
+  } finally {
+    btn.disabled = false;
+    btn.style.opacity = '';
+  }
+}
+
+function openModal(){
+  const modal = document.getElementById('successModal');
+  const box   = document.getElementById('modalBox');
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  // Animate in
+  setTimeout(()=>{
+    box.style.transform = 'scale(1) translateY(0)';
+    box.style.opacity   = '1';
+  }, 30);
+}
+
+function closeModal(){
+  const modal = document.getElementById('successModal');
+  const box   = document.getElementById('modalBox');
+  box.style.transform = 'scale(0.85) translateY(20px)';
+  box.style.opacity   = '0';
+  setTimeout(()=>{
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+  }, 320);
+}
+
+// Close modal on backdrop click
+document.getElementById('successModal').addEventListener('click', function(e){
+  if(e.target === this) closeModal();
+});
+</script>
+</body>
+</html>

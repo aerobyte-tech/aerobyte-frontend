@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AeroByte – Admin Panel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --navy:#04112b;--navy2:#071a3e;
+      --blue1:#0d47a1;--blue2:#1565c0;--blue3:#1976d2;
+      --sky:#42a5f5;--sky2:#64b5f6;
+      --white:#fff;--offwhite:#e8f4fd;--dim:#a0bcd8;
+      --card:rgba(13,71,161,0.13);--border:rgba(66,165,245,0.18);
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:'Inter',sans-serif;background:var(--navy);color:var(--white);min-height:100vh}
+    ::-webkit-scrollbar{width:6px}
+    ::-webkit-scrollbar-track{background:var(--navy)}
+    ::-webkit-scrollbar-thumb{background:var(--blue2);border-radius:3px}
+
+    /* ===== LOGIN ===== */
+    #loginScreen{
+      position:fixed;inset:0;z-index:9999;
+      background:linear-gradient(135deg,#04112b,#071a3e);
+      display:flex;align-items:center;justify-content:center;
+    }
+    .login-box{
+      background:rgba(13,71,161,0.15);border:1px solid var(--border);
+      border-radius:20px;padding:48px 40px;width:100%;max-width:420px;
+      text-align:center;box-shadow:0 24px 80px rgba(0,0,0,0.5);
+    }
+    .login-icon{
+      width:72px;height:72px;border-radius:18px;margin:0 auto 20px;
+      background:linear-gradient(135deg,var(--blue1),var(--sky));
+      display:flex;align-items:center;justify-content:center;font-size:1.8rem;
+      box-shadow:0 8px 28px rgba(13,71,161,0.5);
+    }
+    .login-box h2{font-size:1.5rem;font-weight:800;margin-bottom:6px}
+    .login-box p{color:var(--dim);font-size:.88rem;margin-bottom:30px}
+    .login-input{
+      width:100%;background:rgba(255,255,255,0.06);border:1px solid var(--border);
+      border-radius:10px;padding:13px 16px;color:var(--white);
+      font-family:inherit;font-size:.95rem;margin-bottom:14px;
+      text-align:center;letter-spacing:3px;transition:border-color .2s;
+    }
+    .login-input:focus{outline:none;border-color:rgba(66,165,245,.6);background:rgba(66,165,245,.05)}
+    .login-btn{
+      width:100%;padding:14px;
+      background:linear-gradient(90deg,var(--blue1),var(--blue3));
+      color:white;border:none;border-radius:10px;
+      font-size:1rem;font-weight:700;cursor:pointer;
+      box-shadow:0 6px 22px rgba(13,71,161,.5);transition:all .3s;
+    }
+    .login-btn:hover{transform:translateY(-1px);box-shadow:0 10px 28px rgba(13,71,161,.7)}
+    .login-btn:disabled{opacity:.7;cursor:not-allowed;transform:none}
+    .login-err{color:#ef5350;font-size:.82rem;margin-top:10px;display:none}
+    .login-note{font-size:.75rem;color:rgba(160,188,216,.5);margin-top:14px}
+
+    /* ===== APP ===== */
+    #adminApp{display:none}
+    .topbar{
+      background:rgba(4,17,43,.95);border-bottom:1px solid var(--border);
+      padding:0 28px;height:64px;
+      display:flex;align-items:center;justify-content:space-between;
+      position:sticky;top:0;z-index:100;backdrop-filter:blur(12px);
+    }
+    .topbar-left{display:flex;align-items:center;gap:14px}
+    .logo-icon{
+      width:38px;height:38px;border-radius:9px;
+      background:linear-gradient(135deg,var(--blue1),var(--sky));
+      display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:900;
+    }
+    .logo-text{font-size:1rem;font-weight:700}
+    .logo-text span{color:var(--sky)}
+    .topbar-badge{
+      font-size:.72rem;font-weight:700;background:rgba(66,165,245,.12);
+      border:1px solid rgba(66,165,245,.3);color:var(--sky);
+      padding:4px 12px;border-radius:20px;
+    }
+    .topbar-right{display:flex;align-items:center;gap:12px}
+    .topbar-right a{color:var(--dim);font-size:.85rem;font-weight:500;text-decoration:none;transition:color .2s}
+    .topbar-right a:hover{color:var(--sky)}
+    .logout-btn{
+      background:rgba(239,83,80,.12);border:1px solid rgba(239,83,80,.3);
+      color:#ef9a9a;padding:7px 16px;border-radius:7px;
+      font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;
+    }
+    .logout-btn:hover{background:rgba(239,83,80,.22);color:#ef5350}
+    .main{padding:28px 28px 60px}
+
+    /* ===== STATS ===== */
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:28px}
+    .stat-card{
+      background:var(--card);border:1px solid var(--border);
+      border-radius:14px;padding:20px 22px;
+      display:flex;align-items:center;gap:16px;transition:all .3s;
+    }
+    .stat-card:hover{transform:translateY(-3px);border-color:rgba(66,165,245,.35)}
+    .stat-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+    .stat-icon.total  {background:linear-gradient(135deg,#0d47a1,#1976d2)}
+    .stat-icon.new    {background:linear-gradient(135deg,#0277bd,#42a5f5)}
+    .stat-icon.replied{background:linear-gradient(135deg,#2e7d32,#66bb6a)}
+    .stat-icon.today  {background:linear-gradient(135deg,#e65100,#ff9800)}
+    .stat-val{font-size:1.9rem;font-weight:900;line-height:1}
+    .stat-lbl{font-size:.75rem;color:var(--dim);margin-top:4px;font-weight:500}
+
+    /* ===== TOOLBAR ===== */
+    .toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px}
+    .toolbar-left{display:flex;gap:10px;flex-wrap:wrap}
+    .filter-btn{
+      padding:8px 18px;border-radius:8px;border:1px solid var(--border);
+      background:transparent;color:var(--dim);font-size:.82rem;font-weight:600;
+      cursor:pointer;transition:all .2s;
+    }
+    .filter-btn:hover,.filter-btn.active{background:rgba(66,165,245,.12);border-color:rgba(66,165,245,.4);color:var(--sky)}
+    .search-wrap{position:relative}
+    .search-input{
+      background:rgba(255,255,255,.05);border:1px solid var(--border);
+      border-radius:8px;padding:9px 14px 9px 38px;
+      color:var(--white);font-family:inherit;font-size:.85rem;width:240px;transition:border-color .2s;
+    }
+    .search-input:focus{outline:none;border-color:rgba(66,165,245,.5);background:rgba(66,165,245,.04)}
+    .search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--dim);font-size:.85rem;pointer-events:none}
+
+    /* ===== TABLE ===== */
+    .table-wrap{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+    table{width:100%;border-collapse:collapse}
+    thead tr{background:rgba(13,71,161,.2)}
+    thead th{padding:14px 16px;text-align:left;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--sky2);white-space:nowrap}
+    tbody tr{border-top:1px solid var(--border);transition:background .2s}
+    tbody tr:hover{background:rgba(66,165,245,.05)}
+    tbody td{padding:14px 16px;font-size:.875rem;vertical-align:top}
+    .td-name{font-weight:700;color:var(--white)}
+    .td-sub{font-size:.75rem;color:var(--dim);margin-top:2px}
+    .td-msg{color:var(--dim);max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .td-service{
+      font-size:.75rem;color:var(--sky2);background:rgba(13,71,161,.25);
+      border:1px solid rgba(66,165,245,.2);padding:3px 10px;border-radius:20px;
+      white-space:nowrap;display:inline-block;
+    }
+    .status-badge{font-size:.72rem;font-weight:700;padding:4px 12px;border-radius:20px;display:inline-block;white-space:nowrap;cursor:pointer}
+    .status-new    {background:rgba(66,165,245,.15);border:1px solid rgba(66,165,245,.4);color:#42a5f5}
+    .status-replied{background:rgba(102,187,106,.15);border:1px solid rgba(102,187,106,.4);color:#66bb6a}
+    .status-closed {background:rgba(239,83,80,.12);border:1px solid rgba(239,83,80,.3);color:#ef9a9a}
+    .action-btns{display:flex;gap:7px}
+    .act-btn{
+      width:32px;height:32px;border-radius:7px;
+      display:flex;align-items:center;justify-content:center;
+      font-size:.85rem;cursor:pointer;border:1px solid var(--border);
+      background:rgba(255,255,255,.05);color:var(--dim);transition:all .2s;
+    }
+    .act-btn:hover{background:rgba(66,165,245,.15);color:var(--sky);border-color:rgba(66,165,245,.4)}
+    .act-btn.del:hover{background:rgba(239,83,80,.15);color:#ef5350;border-color:rgba(239,83,80,.4)}
+
+    /* ===== EMPTY / LOADING ===== */
+    .empty-state{padding:80px 20px;text-align:center}
+    .empty-icon{font-size:3.5rem;margin-bottom:18px;opacity:.4}
+    .empty-title{font-size:1.1rem;font-weight:700;color:var(--dim);margin-bottom:8px}
+    .empty-sub{font-size:.85rem;color:rgba(160,188,216,.6)}
+    .loading-row td{text-align:center;padding:50px;color:var(--dim);font-size:.9rem}
+
+    /* ===== MODAL ===== */
+    .modal-overlay{
+      display:none;position:fixed;inset:0;z-index:9000;
+      background:rgba(4,17,43,.88);backdrop-filter:blur(8px);
+      align-items:center;justify-content:center;
+    }
+    .modal-overlay.open{display:flex}
+    .modal-box{
+      background:linear-gradient(145deg,#071a3e,#0a2050);border:1px solid var(--border);
+      border-radius:20px;padding:36px;max-width:540px;width:94%;position:relative;
+      box-shadow:0 24px 80px rgba(0,0,0,.6);
+      animation:modalIn .35s cubic-bezier(.34,1.56,.64,1);
+    }
+    @keyframes modalIn{from{transform:scale(.85) translateY(20px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+    .modal-close{
+      position:absolute;top:14px;right:16px;
+      background:rgba(66,165,245,.1);border:1px solid rgba(66,165,245,.25);
+      color:var(--sky);width:32px;height:32px;border-radius:8px;
+      font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+    }
+    .modal-close:hover{background:rgba(66,165,245,.25)}
+    .modal-title{font-size:1.2rem;font-weight:800;margin-bottom:4px}
+    .modal-date{font-size:.78rem;color:var(--dim);margin-bottom:24px}
+    .detail-row{display:flex;gap:10px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--border)}
+    .detail-row:last-of-type{border-bottom:none}
+    .detail-icon{color:var(--sky);width:18px;flex-shrink:0;margin-top:2px;font-size:.9rem}
+    .detail-label{font-size:.72rem;color:var(--dim);text-transform:uppercase;letter-spacing:1px;font-weight:700}
+    .detail-val{font-size:.92rem;color:var(--offwhite);margin-top:2px;line-height:1.6}
+    .modal-actions{display:flex;gap:10px;margin-top:22px}
+    .modal-act-btn{
+      flex:1;padding:11px;border-radius:9px;font-size:.85rem;font-weight:700;
+      cursor:pointer;border:1px solid var(--border);background:rgba(255,255,255,.05);
+      color:var(--dim);transition:all .2s;
+    }
+    .modal-act-btn.replied{background:rgba(46,125,50,.15);border-color:rgba(102,187,106,.35);color:#66bb6a}
+    .modal-act-btn.replied:hover{background:rgba(46,125,50,.3)}
+    .modal-act-btn.del{background:rgba(239,83,80,.1);border-color:rgba(239,83,80,.3);color:#ef9a9a}
+    .modal-act-btn.del:hover{background:rgba(239,83,80,.25);color:#ef5350}
+
+    /* ===== PAGINATION ===== */
+    .pagination{display:flex;align-items:center;justify-content:center;gap:8px;padding:20px}
+    .pg-btn{
+      width:34px;height:34px;border-radius:7px;display:flex;align-items:center;justify-content:center;
+      border:1px solid var(--border);background:transparent;color:var(--dim);font-size:.82rem;cursor:pointer;transition:all .2s;
+    }
+    .pg-btn:hover,.pg-btn.active{background:rgba(66,165,245,.15);border-color:rgba(66,165,245,.4);color:var(--sky)}
+    .pg-btn:disabled{opacity:.3;cursor:not-allowed}
+
+    /* ===== TOAST ===== */
+    #toast{
+      position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);
+      background:linear-gradient(90deg,var(--blue1),var(--blue3));color:white;
+      padding:12px 28px;border-radius:10px;font-size:.88rem;font-weight:600;
+      z-index:99999;opacity:0;transition:all .3s;pointer-events:none;
+      box-shadow:0 8px 28px rgba(13,71,161,.5);white-space:nowrap;
+    }
+    #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    #toast.error{background:linear-gradient(90deg,#b71c1c,#c62828)}
+
+    @media(max-width:900px){
+      .stats-grid{grid-template-columns:1fr 1fr}
+      .search-input{width:180px}
+      thead th:nth-child(5),tbody td:nth-child(5){display:none}
+    }
+    @media(max-width:600px){
+      .main{padding:16px}
+      .stats-grid{grid-template-columns:1fr 1fr}
+      .topbar{padding:0 14px}
+      thead th:nth-child(3),tbody td:nth-child(3),
+      thead th:nth-child(4),tbody td:nth-child(4){display:none}
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-icon">🔐</div>
+    <h2>Admin Panel</h2>
+    <p>AeroByte Tech Solutions — Secure Access</p>
+    <input id="pwInput" type="password" class="login-input"
+      placeholder="Enter Password"
+      onkeydown="if(event.key==='Enter') doLogin()"
+      autocomplete="current-password"/>
+    <button class="login-btn" id="loginBtn" onclick="doLogin()">
+      <i class="fas fa-sign-in-alt"></i>&nbsp; Login
+    </button>
+    <div class="login-err" id="loginErr"></div>
+    <div class="login-note">🔒 Secure admin access only</div>
+  </div>
+</div>
+
+<!-- ADMIN APP -->
+<div id="adminApp">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="logo-icon">A</div>
+      <div class="logo-text"><span>Aero</span>Byte</div>
+      <div class="topbar-badge"><i class="fas fa-shield-alt"></i>&nbsp; Admin Panel</div>
+    </div>
+    <div class="topbar-right">
+      <a href="index.html" target="_blank"><i class="fas fa-external-link-alt"></i>&nbsp; View Website</a>
+      <button class="logout-btn" onclick="doLogout()"><i class="fas fa-sign-out-alt"></i>&nbsp; Logout</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-icon total"><i class="fas fa-inbox"></i></div><div><div class="stat-val" id="sTotal">—</div><div class="stat-lbl">Total Queries</div></div></div>
+      <div class="stat-card"><div class="stat-icon new"><i class="fas fa-bell"></i></div><div><div class="stat-val" id="sNew">—</div><div class="stat-lbl">New</div></div></div>
+      <div class="stat-card"><div class="stat-icon replied"><i class="fas fa-check-circle"></i></div><div><div class="stat-val" id="sReplied">—</div><div class="stat-lbl">Replied</div></div></div>
+      <div class="stat-card"><div class="stat-icon today"><i class="fas fa-calendar-day"></i></div><div><div class="stat-val" id="sToday">—</div><div class="stat-lbl">Today</div></div></div>
+    </div>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+        <button class="filter-btn" onclick="setFilter('new',this)"><i class="fas fa-circle" style="font-size:.5rem;color:#42a5f5"></i>&nbsp; New</button>
+        <button class="filter-btn" onclick="setFilter('replied',this)"><i class="fas fa-circle" style="font-size:.5rem;color:#66bb6a"></i>&nbsp; Replied</button>
+        <button class="filter-btn" onclick="setFilter('closed',this)"><i class="fas fa-circle" style="font-size:.5rem;color:#ef5350"></i>&nbsp; Closed</button>
+      </div>
+      <div class="search-wrap">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" class="search-input" id="searchBox"
+          placeholder="Search name, email..."
+          oninput="debounceSearch()"/>
+      </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Contact</th>
+            <th>Service</th>
+            <th>Message</th>
+            <th>Date & Time</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="queryTable">
+          <tr class="loading-row"><td colspan="7"><i class="fas fa-spinner fa-spin"></i>&nbsp; Loading...</td></tr>
+        </tbody>
+      </table>
+      <div id="emptyState" class="empty-state" style="display:none">
+        <div class="empty-icon">📭</div>
+        <div class="empty-title">No queries found</div>
+        <div class="empty-sub">When someone submits the contact form, it will appear here.</div>
+      </div>
+      <div class="pagination" id="pagination"></div>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="detailModal" onclick="if(event.target===this)closeDetail()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeDetail()">✕</button>
+    <div class="modal-title" id="dName">—</div>
+    <div class="modal-date" id="dDate">—</div>
+    <div id="dBody"></div>
+    <div class="modal-actions">
+      <button class="modal-act-btn replied" onclick="markFromModal('replied')"><i class="fas fa-check"></i> Mark Replied</button>
+      <button class="modal-act-btn" onclick="markFromModal('closed')"><i class="fas fa-times-circle"></i> Close</button>
+      <button class="modal-act-btn del" onclick="deleteFromModal()"><i class="fas fa-trash"></i> Delete</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ===== CONFIG — same as index.html =====
+const API_URL = 'https://aerobyte-backend.onrender.com';
+
+let token        = null;   // JWT stored in memory only (secure)
+let currentFilter = 'all';
+let currentPage   = 1;
+let searchTimer   = null;
+let activeId      = null;
+
+// ===== LOGIN =====
+async function doLogin(){
+  const pw  = document.getElementById('pwInput').value;
+  const btn = document.getElementById('loginBtn');
+  const err = document.getElementById('loginErr');
+  if(!pw){ showLoginErr('Please enter password'); return; }
+
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>&nbsp; Logging in...';
+  btn.disabled  = true;
+  err.style.display = 'none';
+
+  try {
+    const res  = await fetch(`${API_URL}/api/auth/login`, {
+      method  : 'POST',
+      headers : {'Content-Type':'application/json'},
+      body    : JSON.stringify({ password: pw })
+    });
+    const data = await res.json();
+
+    if(res.ok && data.token){
+      token = data.token;
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('adminApp').style.display    = 'block';
+      loadStats();
+      loadQueries();
+    } else {
+      showLoginErr(data.error || 'Login failed');
+    }
+  } catch(e){
+    showLoginErr('Cannot connect to server. Check your internet.');
+  } finally {
+    btn.innerHTML = '<i class="fas fa-sign-in-alt"></i>&nbsp; Login';
+    btn.disabled  = false;
+  }
+}
+
+function showLoginErr(msg){
+  const err = document.getElementById('loginErr');
+  err.innerHTML = `<i class="fas fa-times-circle"></i>&nbsp; ${msg}`;
+  err.style.display = 'block';
+  document.getElementById('pwInput').style.borderColor = 'rgba(239,83,80,.7)';
+  setTimeout(()=>{ err.style.display='none'; document.getElementById('pwInput').style.borderColor=''; },3000);
+}
+
+function doLogout(){
+  token = null;
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('adminApp').style.display    = 'none';
+  document.getElementById('pwInput').value = '';
+}
+
+// ===== AUTH HEADERS =====
+function authHeaders(){ return { 'Content-Type':'application/json', 'Authorization':`Bearer ${token}` }; }
+
+// ===== STATS =====
+async function loadStats(){
+  try {
+    const res  = await fetch(`${API_URL}/api/stats`, { headers: authHeaders() });
+    const data = await res.json();
+    if(res.ok){
+      document.getElementById('sTotal').textContent   = data.total;
+      document.getElementById('sNew').textContent     = data.new;
+      document.getElementById('sReplied').textContent = data.replied;
+      document.getElementById('sToday').textContent   = data.today;
+    }
+  } catch(e){ console.error('Stats error', e); }
+}
+
+// ===== QUERIES =====
+async function loadQueries(){
+  const search = document.getElementById('searchBox').value;
+  const params = new URLSearchParams({
+    status : currentFilter,
+    page   : currentPage,
+    limit  : 10,
+    ...(search ? { search } : {})
+  });
+
+  document.getElementById('queryTable').innerHTML =
+    `<tr class="loading-row"><td colspan="7"><i class="fas fa-spinner fa-spin"></i>&nbsp; Loading queries...</td></tr>`;
+  document.getElementById('emptyState').style.display = 'none';
+
+  try {
+    const res  = await fetch(`${API_URL}/api/queries?${params}`, { headers: authHeaders() });
+    const data = await res.json();
+
+    if(!res.ok){ throw new Error(data.error); }
+
+    renderTable(data.queries, data.total, data.pages);
+  } catch(e){
+    document.getElementById('queryTable').innerHTML =
+      `<tr class="loading-row"><td colspan="7" style="color:#ef5350"><i class="fas fa-exclamation-circle"></i>&nbsp; Failed to load. Check backend connection.</td></tr>`;
+  }
+}
+
+// ===== RENDER TABLE =====
+function renderTable(queries, total, pages){
+  const tbody = document.getElementById('queryTable');
+  const empty = document.getElementById('emptyState');
+
+  if(!queries || !queries.length){
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+    document.getElementById('pagination').innerHTML = '';
+    return;
+  }
+
+  empty.style.display = 'none';
+  const start = (currentPage-1)*10;
+
+  tbody.innerHTML = queries.map((q,i) => `
+    <tr>
+      <td style="color:var(--dim);font-size:.8rem">${start+i+1}</td>
+      <td>
+        <div class="td-name">${esc(q.name)}</div>
+        <div class="td-sub"><i class="fas fa-phone" style="width:12px"></i> ${esc(q.phone)}</div>
+        <div class="td-sub"><i class="fas fa-envelope" style="width:12px"></i> ${esc(q.email)}</div>
+      </td>
+      <td><span class="td-service">${esc(q.service||'—')}</span></td>
+      <td><div class="td-msg">${esc(q.message)}</div></td>
+      <td style="font-size:.78rem;color:var(--dim);white-space:nowrap">
+        ${q.createdAt ? new Date(q.createdAt).toLocaleString('en-IN') : '—'}
+      </td>
+      <td>
+        <span class="status-badge status-${q.status}" onclick="cycleStatus('${q._id}','${q.status}')">
+          ${statusLabel(q.status)}
+        </span>
+      </td>
+      <td>
+        <div class="action-btns">
+          <div class="act-btn" onclick="openDetail(${JSON.stringify(q).replace(/"/g,'&quot;')})" title="View Details">
+            <i class="fas fa-eye"></i>
+          </div>
+          <div class="act-btn del" onclick="deleteQuery('${q._id}')" title="Delete">
+            <i class="fas fa-trash"></i>
+          </div>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+
+  renderPagination(pages);
+}
+
+function statusLabel(s){
+  return s==='new' ? '🔵 New' : s==='replied' ? '🟢 Replied' : s==='closed' ? '🔴 Closed' : s;
+}
+function esc(s){ return String(s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ===== PAGINATION =====
+function renderPagination(pages){
+  const pg = document.getElementById('pagination');
+  if(pages<=1){ pg.innerHTML=''; return; }
+  let html = `<button class="pg-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹</button>`;
+  for(let i=1;i<=pages;i++) html += `<button class="pg-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
+  html += `<button class="pg-btn" onclick="goPage(${currentPage+1})" ${currentPage===pages?'disabled':''}>›</button>`;
+  pg.innerHTML = html;
+}
+function goPage(p){ currentPage=p; loadQueries(); }
+
+// ===== FILTER & SEARCH =====
+function setFilter(f, btn){
+  currentFilter=f; currentPage=1;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  loadQueries();
+}
+function debounceSearch(){ clearTimeout(searchTimer); searchTimer=setTimeout(()=>{ currentPage=1; loadQueries(); },400); }
+
+// ===== CYCLE STATUS =====
+async function cycleStatus(id, current){
+  const cycle = {new:'replied',replied:'closed',closed:'new'};
+  const newStatus = cycle[current]||'new';
+  try {
+    const res = await fetch(`${API_URL}/api/queries/${id}`, {
+      method  : 'PATCH',
+      headers : authHeaders(),
+      body    : JSON.stringify({ status: newStatus })
+    });
+    if(res.ok){ loadStats(); loadQueries(); showToast(`Status: ${newStatus.toUpperCase()}`); }
+    else { showToast('Failed to update','error'); }
+  } catch(e){ showToast('Connection error','error'); }
+}
+
+// ===== DELETE =====
+async function deleteQuery(id){
+  if(!confirm('Delete this query permanently?')) return;
+  try {
+    const res = await fetch(`${API_URL}/api/queries/${id}`, { method:'DELETE', headers:authHeaders() });
+    if(res.ok){ loadStats(); loadQueries(); showToast('Query deleted.'); }
+    else { showToast('Failed to delete','error'); }
+  } catch(e){ showToast('Connection error','error'); }
+}
+
+// ===== DETAIL MODAL =====
+function openDetail(q){
+  if(typeof q === 'string') q = JSON.parse(q);
+  activeId = q._id;
+  document.getElementById('dName').textContent = q.name;
+  document.getElementById('dDate').textContent = '📅 ' + (q.createdAt ? new Date(q.createdAt).toLocaleString('en-IN') : '—');
+  document.getElementById('dBody').innerHTML = `
+    <div class="detail-row"><i class="fas fa-phone detail-icon"></i><div><div class="detail-label">Phone</div><div class="detail-val">${esc(q.phone)}</div></div></div>
+    <div class="detail-row"><i class="fas fa-envelope detail-icon"></i><div><div class="detail-label">Email</div><div class="detail-val">${esc(q.email)}</div></div></div>
+    <div class="detail-row"><i class="fas fa-tools detail-icon"></i><div><div class="detail-label">Service Needed</div><div class="detail-val">${esc(q.service||'—')}</div></div></div>
+    <div class="detail-row"><i class="fas fa-comment-alt detail-icon"></i><div><div class="detail-label">Message</div><div class="detail-val" style="white-space:pre-wrap">${esc(q.message)}</div></div></div>
+    <div class="detail-row" style="border:none"><i class="fas fa-tag detail-icon"></i><div><div class="detail-label">Status</div><div class="detail-val"><span class="status-badge status-${q.status}">${statusLabel(q.status)}</span></div></div></div>
+  `;
+  document.getElementById('detailModal').classList.add('open');
+}
+function closeDetail(){ document.getElementById('detailModal').classList.remove('open'); activeId=null; }
+
+async function markFromModal(status){
+  if(!activeId) return;
+  await cycleStatusDirect(activeId, status);
+  closeDetail();
+}
+async function deleteFromModal(){
+  if(!activeId) return;
+  await deleteQuery(activeId);
+  closeDetail();
+}
+async function cycleStatusDirect(id, status){
+  try {
+    const res = await fetch(`${API_URL}/api/queries/${id}`, {
+      method:'PATCH', headers:authHeaders(), body:JSON.stringify({status})
+    });
+    if(res.ok){ loadStats(); loadQueries(); showToast(`Marked as ${status.toUpperCase()}`); }
+  } catch(e){ showToast('Connection error','error'); }
+}
+
+// ===== TOAST =====
+function showToast(msg, type=''){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show' + (type==='error' ? ' error' : '');
+  setTimeout(()=>t.className='',2800);
+}
+</script>
+</body>
+</html>
