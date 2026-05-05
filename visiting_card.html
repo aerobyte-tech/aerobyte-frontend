@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AeroByte – Visiting Card</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet"/>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{
+      font-family:'Inter',sans-serif;
+      background: #0a0f1e;
+      min-height:100vh;
+      display:flex;flex-direction:column;
+      align-items:center;justify-content:center;
+      padding:40px 20px;
+      gap:40px;
+    }
+
+    h2{
+      color:#42a5f5;font-size:.85rem;letter-spacing:3px;
+      text-transform:uppercase;font-weight:600;
+      margin-bottom:16px;text-align:center;
+    }
+
+    /* ===== CARD WRAPPER ===== */
+    .card-group{display:flex;gap:40px;flex-wrap:wrap;justify-content:center;align-items:flex-start}
+
+    /* ===== CARD BASE ===== */
+    .card{
+      width: 380px;
+      height: 213px;
+      border-radius: 16px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(66,165,245,0.2);
+    }
+
+    /* ===== FRONT CARD ===== */
+    .front{
+      background: linear-gradient(135deg, #04112b 0%, #071a3e 40%, #0d2a5c 100%);
+    }
+
+    /* Circuit lines decoration */
+    .front::before{
+      content:'';
+      position:absolute;inset:0;
+      background-image:
+        linear-gradient(rgba(66,165,245,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(66,165,245,0.08) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+
+    /* Blue accent bar left */
+    .front-accent{
+      position:absolute;left:0;top:0;bottom:0;width:6px;
+      background:linear-gradient(180deg,#1976d2,#42a5f5,#1976d2);
+    }
+
+    /* Logo section */
+    .front-left{
+      position:absolute;left:24px;top:0;bottom:0;
+      width:130px;
+      display:flex;flex-direction:column;
+      justify-content:center;gap:8px;
+      border-right:1px solid rgba(66,165,245,0.15);
+    }
+
+    .logo-wrap{display:flex;align-items:center;gap:8px}
+    .logo-icon{
+      width:36px;height:36px;border-radius:9px;
+      background:linear-gradient(135deg,#0d47a1,#42a5f5);
+      display:flex;align-items:center;justify-content:center;
+      font-family:'Orbitron',sans-serif;
+      font-size:1rem;font-weight:900;color:white;
+      flex-shrink:0;
+    }
+    .logo-name{
+      font-family:'Orbitron',sans-serif;
+      font-size:.85rem;font-weight:700;
+      color:white;line-height:1.2;
+    }
+    .logo-name span{color:#42a5f5}
+    .logo-sub{
+      font-size:.5rem;letter-spacing:2.5px;
+      color:rgba(160,188,216,0.7);text-transform:uppercase;
+      margin-top:2px;
+    }
+    .tagline{
+      font-size:.48rem;color:rgba(160,188,216,0.55);
+      font-style:italic;margin-top:4px;
+      line-height:1.5;
+    }
+    .tagline span{color:#42a5f5;font-style:normal;font-weight:600}
+
+    /* Right info section */
+    .front-right{
+      position:absolute;right:0;top:0;bottom:0;left:162px;
+      display:flex;flex-direction:column;justify-content:center;
+      padding:16px 20px 16px 16px;
+    }
+
+    .person-name{
+      font-size:1.35rem;font-weight:800;color:white;
+      letter-spacing:.5px;margin-bottom:2px;
+    }
+    .person-title{
+      font-size:.62rem;color:#42a5f5;font-weight:600;
+      letter-spacing:1px;text-transform:uppercase;
+      border-bottom:1px solid rgba(66,165,245,0.2);
+      padding-bottom:8px;margin-bottom:10px;
+    }
+
+    .contact-list{display:flex;flex-direction:column;gap:5px}
+    .contact-row{display:flex;align-items:center;gap:7px}
+    .contact-icon{
+      width:18px;height:18px;border-radius:5px;
+      background:linear-gradient(135deg,#0d47a1,#1976d2);
+      display:flex;align-items:center;justify-content:center;
+      font-size:.55rem;color:white;flex-shrink:0;
+    }
+    .contact-text{font-size:.58rem;color:#c8dff0;font-weight:500}
+    .contact-text.bold{color:white;font-weight:600;font-size:.6rem}
+
+    /* Bottom strip */
+    .front-bottom{
+      position:absolute;bottom:0;left:0;right:0;
+      background:linear-gradient(90deg,#0d47a1,#1565c0,#0d47a1);
+      padding:6px 20px;
+      display:flex;align-items:center;justify-content:center;
+      gap:6px;
+    }
+    .front-bottom span{
+      font-size:.58rem;font-weight:700;color:white;letter-spacing:1.5px;
+    }
+    .dot{width:3px;height:3px;background:#42a5f5;border-radius:50%;display:inline-block}
+
+    /* Glow orb */
+    .glow-orb{
+      position:absolute;top:-30px;right:20px;
+      width:100px;height:100px;
+      background:radial-gradient(circle,rgba(66,165,245,0.12),transparent 70%);
+      border-radius:50%;pointer-events:none;
+    }
+
+    /* ===== BACK CARD ===== */
+    .back{
+      background: linear-gradient(135deg, #04112b 0%, #071a3e 60%, #0a2050 100%);
+    }
+    .back::before{
+      content:'';position:absolute;inset:0;
+      background-image:
+        radial-gradient(circle at 80% 50%, rgba(66,165,245,0.07) 0%, transparent 60%),
+        linear-gradient(rgba(66,165,245,0.05) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(66,165,245,0.05) 1px,transparent 1px);
+      background-size:100% 100%, 24px 24px, 24px 24px;
+    }
+
+    .back-left{
+      position:absolute;left:0;top:0;bottom:0;right:190px;
+      display:flex;flex-direction:column;justify-content:center;align-items:center;
+      padding:20px;gap:10px;
+      border-right:1px solid rgba(66,165,245,0.12);
+    }
+
+    .services-title{
+      font-size:.55rem;letter-spacing:2px;color:#42a5f5;
+      text-transform:uppercase;font-weight:700;
+      margin-bottom:4px;
+    }
+    .service-item{
+      display:flex;align-items:center;gap:6px;
+      width:100%;
+    }
+    .service-dot{
+      width:5px;height:5px;border-radius:50%;flex-shrink:0;
+      background:linear-gradient(135deg,#1565c0,#42a5f5);
+    }
+    .service-name{font-size:.52rem;color:#a0bcd8;font-weight:500}
+
+    .back-right{
+      position:absolute;right:0;top:0;bottom:0;left:190px;
+      display:flex;flex-direction:column;
+      align-items:center;justify-content:center;
+      padding:16px;gap:8px;
+    }
+    .qr-label{font-size:.5rem;color:#42a5f5;font-weight:700;letter-spacing:2px;text-transform:uppercase}
+    .qr-wrap{
+      background:white;
+      border-radius:10px;
+      padding:6px;
+      box-shadow:0 0 20px rgba(66,165,245,0.3);
+    }
+    .qr-wrap img{width:90px;height:90px;display:block;border-radius:6px}
+    .qr-sub{font-size:.48rem;color:rgba(160,188,216,0.6);text-align:center;line-height:1.5}
+    .qr-url{font-size:.52rem;color:#42a5f5;font-weight:700}
+
+    /* Bottom accent back */
+    .back-bottom{
+      position:absolute;bottom:0;left:0;right:0;height:5px;
+      background:linear-gradient(90deg,#0d47a1,#42a5f5,#0d47a1);
+    }
+
+    /* Corner accents */
+    .corner{position:absolute;width:16px;height:16px}
+    .corner-tl{top:8px;left:8px;border-top:2px solid rgba(66,165,245,0.4);border-left:2px solid rgba(66,165,245,0.4);border-radius:2px 0 0 0}
+    .corner-tr{top:8px;right:8px;border-top:2px solid rgba(66,165,245,0.4);border-right:2px solid rgba(66,165,245,0.4);border-radius:0 2px 0 0}
+    .corner-bl{bottom:8px;left:8px;border-bottom:2px solid rgba(66,165,245,0.4);border-left:2px solid rgba(66,165,245,0.4);border-radius:0 0 0 2px}
+    .corner-br{bottom:8px;right:8px;border-bottom:2px solid rgba(66,165,245,0.4);border-right:2px solid rgba(66,165,245,0.4);border-radius:0 0 2px 0}
+
+    /* ===== PRINT BTN ===== */
+    .print-btn{
+      background:linear-gradient(90deg,#0d47a1,#1976d2);
+      color:white;border:none;padding:12px 32px;border-radius:10px;
+      font-size:.9rem;font-weight:700;cursor:pointer;
+      box-shadow:0 6px 22px rgba(13,71,161,0.5);
+      transition:all .3s;letter-spacing:1px;
+    }
+    .print-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(13,71,161,0.7)}
+
+    /* ===== PRINT STYLES ===== */
+    @media print{
+      body{background:white;padding:10mm;gap:10mm}
+      .print-btn,.page-title{display:none}
+      .card{box-shadow:none;border:1px solid #ddd}
+      h2{color:#0d47a1}
+    }
+
+    .page-title{
+      text-align:center;color:rgba(160,188,216,0.5);
+      font-size:.75rem;letter-spacing:2px;text-transform:uppercase;
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-title">AeroByte Tech Solutions — Visiting Card Design</div>
+
+<div class="card-group">
+
+  <!-- ===== FRONT ===== -->
+  <div>
+    <h2>✦ Front Side</h2>
+    <div class="card front">
+      <div class="front-accent"></div>
+      <div class="glow-orb"></div>
+
+      <!-- Corner accents -->
+      <div class="corner corner-tl"></div>
+      <div class="corner corner-tr"></div>
+      <div class="corner corner-bl"></div>
+      <div class="corner corner-br"></div>
+
+      <!-- Logo Left -->
+      <div class="front-left">
+        <div class="logo-wrap">
+          <div class="logo-icon">A</div>
+          <div>
+            <div class="logo-name"><span>Aero</span>Byte</div>
+            <div class="logo-sub">Tech Solutions</div>
+          </div>
+        </div>
+        <div class="tagline">
+          <span>Smart Solutions.</span><br/>
+          <span>Solid Performance.</span>
+        </div>
+      </div>
+
+      <!-- Info Right -->
+      <div class="front-right">
+        <div class="person-name">Prince</div>
+        <div class="person-title">Founder & Technical Specialist</div>
+        <div class="contact-list">
+          <div class="contact-row">
+            <div class="contact-icon">📞</div>
+            <div class="contact-text bold">+91 8929770223</div>
+          </div>
+          <div class="contact-row">
+            <div class="contact-icon">📞</div>
+            <div class="contact-text">+91 7053501691</div>
+          </div>
+          <div class="contact-row">
+            <div class="contact-icon">✉️</div>
+            <div class="contact-text bold">prince.koli@aerobytes.tech</div>
+          </div>
+          <div class="contact-row">
+            <div class="contact-icon">🌐</div>
+            <div class="contact-text bold">www.aerobytes.tech</div>
+          </div>
+          <div class="contact-row">
+            <div class="contact-icon">📍</div>
+            <div class="contact-text">India</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Strip -->
+      <div class="front-bottom">
+        <span>WE BUILD</span>
+        <div class="dot"></div>
+        <span>WE SETUP</span>
+        <div class="dot"></div>
+        <span>WE SUPPORT</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== BACK ===== -->
+  <div>
+    <h2>✦ Back Side</h2>
+    <div class="card back">
+      <!-- Corner accents -->
+      <div class="corner corner-tl"></div>
+      <div class="corner corner-tr"></div>
+      <div class="corner corner-bl"></div>
+      <div class="corner corner-br"></div>
+
+      <!-- Services Left -->
+      <div class="back-left">
+        <div class="services-title">Our Services</div>
+        <div class="service-item"><div class="service-dot"></div><div class="service-name">Software Solutions</div></div>
+        <div class="service-item"><div class="service-dot"></div><div class="service-name">Hardware Setup & Installation</div></div>
+        <div class="service-item"><div class="service-dot"></div><div class="service-name">Networking & IT Support</div></div>
+        <div class="service-item"><div class="service-dot"></div><div class="service-name">Our Own Products</div></div>
+        <div class="service-item"><div class="service-dot"></div><div class="service-name">Apps on Play Store</div></div>
+
+        <div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(66,165,245,0.15);width:100%">
+          <div style="font-size:.48rem;color:#42a5f5;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px">Our Products</div>
+          <div class="service-item"><div class="service-dot"></div><div class="service-name" style="color:#64b5f6">ParkZone — Smart Parking</div></div>
+          <div class="service-item"><div class="service-dot"></div><div class="service-name" style="color:#64b5f6">BarberBook — Salon Manager</div></div>
+        </div>
+      </div>
+
+      <!-- QR Right -->
+      <div class="back-right">
+        <div class="qr-label">Scan to Explore</div>
+        <div class="qr-wrap">
+          <img src="qr_code.png" alt="QR Code - www.aerobytes.tech"/>
+        </div>
+        <div class="qr-url">www.aerobytes.tech</div>
+        <div class="qr-sub">View All Products,<br/>Services & Our Apps</div>
+      </div>
+
+      <div class="back-bottom"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Print Button -->
+<button class="print-btn" onclick="window.print()">🖨️ &nbsp;Print Visiting Card</button>
+
+</body>
+</html>
